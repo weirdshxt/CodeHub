@@ -2,29 +2,32 @@ const fs = require("fs").promises;
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 
-
-
 async function commitChanges(message) {
-  const commitID = uuidv4();
   const repoPath = path.resolve(process.cwd(), ".code");
-  const statusPath = path.join(repoPath, "status");
-  const commitsPath = path.join(repoPath, "commits");
-  const commitPath = path.join(commitsPath, `${commitID}.json`);
-
+  const StatusPath = path.join(repoPath, "status");
+  const commitPath = path.join(repoPath, "commits");
 
   try {
-    await fs.mkdir(commitsPath, { recursive: true });
-    await fs.writeFile(commitPath, JSON.stringify({ message, Date: new Date().toISOString(), id: commitID }, null, 2));
+    const commitID = uuidv4();
+    const commitDir = path.join(commitPath, commitID);
+    await fs.mkdir(commitDir, { recursive: true });
 
-    const files = await fs.readdir(statusPath);
+    const files = await fs.readdir(StatusPath);
     for (const file of files) {
-      const filePath = path.join(statusPath, file);
-      await fs.copyFile(filePath, path.join(repoPath, file));
+      await fs.copyFile(
+        path.join(StatusPath, file),
+        path.join(commitDir, file)
+      );
     }
 
-    console.log(`Committed changes with ID: ${commitID}`);
-  } catch (error) {
-    console.error("Error committing changes:", error);
+    await fs.writeFile(
+      path.join(commitDir, "commit.json"),
+      JSON.stringify({ message, date: new Date().toISOString() })
+    );
+
+    console.log(`Commit ${commitID} created with message: ${message}`);
+  } catch (err) {
+    console.error("Error committing files : ", err);
   }
 }
 

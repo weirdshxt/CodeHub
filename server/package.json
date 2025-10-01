@@ -11,6 +11,7 @@
   "description": "CodeHub is a GitHub replica",
   "dependencies": {
     "aws-sdk": "^2.1692.0",
+    "dotenv": "^17.2.3",
     "uuid": "^11.1.0",
     "yargs": "^17.7.2"
   }
