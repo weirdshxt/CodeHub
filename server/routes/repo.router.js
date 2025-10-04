@@ -1,5 +1,5 @@
 const express = require('express');
-const repoContro = require('../controllers/repo.contro');
+const repoContro = require('../controllers/repoContro');
 
 const repoRouter = express.Router();
 
