@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const http = require("http");
 const { Server } = require("socket.io");
+const mainRouter = require("./routes/main.router")
 
 
 require('dotenv').config();
@@ -82,9 +83,8 @@ yargs(hideBin(process.argv))
 
     app.use(cors(origin="*"));
 
-    app.get("/", (req, res) => {
-      res.send("Hello CodeHub!");
-    });
+    app.use("/", mainRouter);
+
 
     const server = http.createServer(app);
     const io = new Server(server, {
