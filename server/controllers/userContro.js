@@ -100,16 +100,43 @@ const login = async (req, res) => {
 
 };
 
-const getAllUsers = (req, res) => {
-  console.log("getAllUsers");
+const getAllUsers = async (req, res) => {
+  try {
+    await connectToMongo();
+    const db = client.db("codeHub");
+    const usersCollection = db.collection("users");
+
+    const users = await usersCollection.find({}).toArray();
+    res.status(200).json(users);
+    
+  } catch (err) {
+    console.error("Error fetching users",err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
-const logout = (req, res) => {
-  console.log("logout");
-};
+const getUserProfile = async (req, res) => {
+  try {
+    await connectToMongo();
+    const db = client.db("codeHub");
+    const usersCollection = db.collection("users");
 
-const getUserProfile = (req, res) => {
-  console.log("getUserProfile");
+    const userId = req.params.id;
+    if (!ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+    
+  } catch (err) {
+    console.error("Error fetching user profile",err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 const updateUserProfile = (req, res) => {
@@ -124,7 +151,6 @@ module.exports = {
   getAllUsers,
   signUp,
   login,
-  logout,
   getUserProfile,
   updateUserProfile,
   deleteUserProfile,
