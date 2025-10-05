@@ -7,7 +7,6 @@ const RepositorySchema = new Schema({
     content: [{ type: String }],
     visibility: { type: Boolean},
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    collaborators: [{ type: Schema.Types.ObjectId, ref: "User" }],
     stars: { type: Number, default: 0 },
     forks: { type: Number, default: 0 },
     issues: [{ type: Schema.Types.ObjectId, ref: "Issue" }],
