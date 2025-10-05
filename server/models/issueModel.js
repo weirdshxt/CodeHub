@@ -4,9 +4,8 @@ const { Schema } = mongoose;
 const IssueSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, default: "" },
-    status: { type: String, enum: ["open", "closed"] },
+    status: { type: String, enum: ["open", "closed"] , default: "open" },
     repository: { type: Schema.Types.ObjectId, ref: "Repository", required: true },
-    assignee: { type: Schema.Types.ObjectId, ref: "User" },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 
